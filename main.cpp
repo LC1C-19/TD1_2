@@ -11,9 +11,18 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, 1280, 720);
 
+	HWND gameWindow = GetActiveWindow();
+
+	LONG_PTR windowStyle = GetWindowLongPtr(gameWindow, GWL_STYLE);
+	RECT windowRect = {};
+	GetWindowRect(gameWindow, &windowRect);
+
+	bool isFullScreen = false;
+
+
 	// キー入力結果を受け取る箱
-	char keys[256] = {0};
-	char preKeys[256] = {0};
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
 
 	int currentSceen = TITLE;
 
@@ -26,20 +35,79 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		memcpy(preKeys, keys, 256);
 		Novice::GetHitKeyStateAll(keys);
 
-		///
-		/// ↓更新処理ここから
-		///
+		if (keys[DIK_SPACE] && !preKeys[DIK_SPACE])
+		{
+
+
+			if (!isFullScreen)
+			{
+				GetWindowRect(gameWindow, &windowRect);
+
+				SetWindowLongPtr(
+					gameWindow,
+					GWL_STYLE,
+					WS_POPUP | WS_VISIBLE
+				);
+
+				HMONITOR monitor = MonitorFromWindow(
+					gameWindow,
+					MONITOR_DEFAULTTONEAREST
+				);
+
+				MONITORINFO monitorInfo = {};
+				monitorInfo.cbSize = sizeof(MONITORINFO);
+				GetMonitorInfo(monitor, &monitorInfo);
+
+				SetWindowPos(
+					gameWindow,
+					HWND_TOP,
+					monitorInfo.rcMonitor.left,
+					monitorInfo.rcMonitor.top,
+					monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left,
+					monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top,
+					SWP_FRAMECHANGED | SWP_SHOWWINDOW
+				);
+
+				isFullScreen = true;
+			}
+			else
+			{
+				SetWindowLongPtr(
+					gameWindow,
+					GWL_STYLE,
+					windowStyle
+				);
+
+				SetWindowPos(
+					gameWindow,
+					HWND_NOTOPMOST,
+					windowRect.left,
+					windowRect.top,
+					windowRect.right - windowRect.left,
+					windowRect.bottom - windowRect.top,
+					SWP_FRAMECHANGED | SWP_SHOWWINDOW
+				);
+
+				isFullScreen = false;
+			}
+		}
+
 
 		switch (currentSceen)
 		{
 		case TITLE:
 		{
 			//pull request test
+			
+
+			break;
 
 		}
 		case PLAY:
 		{
 
+
+			break;
 		}
 
 		}
