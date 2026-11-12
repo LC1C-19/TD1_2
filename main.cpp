@@ -5,7 +5,7 @@ enum Sceen
 	PLAY
 };
 
-
+//a
 
 
 const char kWindowTitle[] = "LC1C_09_シミズ_イツキ";
