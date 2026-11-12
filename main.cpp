@@ -1,8 +1,11 @@
 #include <Novice.h>
+enum Sceen
+{
+	TITLE,
+	PLAY
+};
 
 const char kWindowTitle[] = "LC1C_09_シミズ_イツキ";
-
-// Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	// ライブラリの初期化
@@ -11,6 +14,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	// キー入力結果を受け取る箱
 	char keys[256] = {0};
 	char preKeys[256] = {0};
+
+	int currentSceen = TITLE;
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -24,6 +29,20 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		///
 		/// ↓更新処理ここから
 		///
+
+		switch (currentSceen)
+		{
+		case TITLE:
+		{
+
+
+		}
+		case PLAY:
+		{
+
+		}
+
+		}
 
 		///
 		/// ↑更新処理ここまで
