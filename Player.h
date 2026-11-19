@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector2.h"
+#include "Camera.h"
 #include "InputManager.h"
 
 class Player
@@ -7,7 +8,9 @@ class Player
 public:
 	void Initialize();
 	void Update(const InputManager& input);
-	void Draw()const;
+	Vector2 GetPosition() const;
+	void Draw(const Camera& camera) const;
+	void Debug();
 
 private:
 	Vector2 position_ = {};
