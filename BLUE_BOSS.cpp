@@ -4,6 +4,8 @@
 #include <cmath>
 #include <cstdlib>
 
+
+//Pull確認用
 namespace {
 	const float kPi = 3.14f;
 	const int kScreenWidth = 1280;
