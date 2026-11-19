@@ -7,6 +7,7 @@
 #include "GameConfig.h"
 #include "Map.h"
 #include "Camera.h"
+#include "BLUE_BOSS.h"
 
 #pragma comment(lib, "Xinput.lib")
 
@@ -15,6 +16,7 @@ enum Sceen
 	TITLE,
 	PLAY,
 	BOSS,
+	BLUE_BOSS,
 	MENU
 };
 
@@ -37,6 +39,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	// ボス
 	Boss boss;
+	Blue_Boss blue_boss;
 
 	// マップ
 	Map map;
@@ -115,6 +118,15 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 				currentSceen = BOSS;
 				break;
 			}
+
+			if (playerTileX >= kMapWidth - 4 &&
+				playerTileY <= kMapHeight - 4) {
+				player.SetPosition({ 640.0f,620.0f });
+				currentSceen = BLUE_BOSS;
+				break;
+
+			}
+
 			player.Debug();
 			camera.Update(player.GetPosition());
 			map.Debug(camera);
@@ -141,8 +153,36 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 				break;
 
 			}
-			boss.Draw();
+			
 			map.Debug(camera);
+			boss.Draw();
+			player.Draw(camera);
+
+			break;
+		}
+
+		case BLUE_BOSS:
+		{
+			Novice::ScreenPrintf(10, 10, "blue boss");
+
+			player.Update(input, map);
+			camera.Update(player.GetPosition());
+			blue_boss.Update();
+
+			Vector2 PlayerPosition = player.GetPosition();
+			int playerTileX = static_cast<int>(PlayerPosition.x) / kTileSize;
+			int playerTileY = static_cast<int>(PlayerPosition.y) / kTileSize;
+
+			if (playerTileX >= kMapWidth - 4 &&
+				playerTileY <= kMapHeight - 4) {
+				player.SetPosition({ 640.0f,620.0f });
+				currentSceen = BLUE_BOSS;
+				break;
+
+			}
+
+			map.Debug(camera);
+			blue_boss.Draw();
 			player.Draw(camera);
 
 			break;

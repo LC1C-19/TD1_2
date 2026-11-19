@@ -4,7 +4,7 @@
 class Boss
 {
 public:
-	static const int kMaxBullets = 100;
+	static const int kMaxBullets = 100;	// 最大弾数
 
 	struct Bullet {
 		Vector2 position;
