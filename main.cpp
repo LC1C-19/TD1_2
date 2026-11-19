@@ -12,7 +12,8 @@
 enum Sceen
 {
 	TITLE,
-	PLAY
+	PLAY,
+	BOSS
 };
 
 const char kWindowTitle[] = "LC1C_09_シミズ_イツキ";
@@ -94,14 +95,33 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		case PLAY:
 		{
 			Novice::ScreenPrintf(10, 10, "play");
-			player.Debug();
 			player.Update(input);
-			camera.Update(player.GetPosition());
+			Vector2 PlayerPosition = player.GetPosition();
 
+			int playerTileX = static_cast<int>(PlayerPosition.x) / kTileSize;
+			int playerTileY = static_cast<int>(PlayerPosition.y) / kTileSize;
+
+			Novice::ScreenPrintf(
+				10, 50,
+				"Tile X:%d Y:%d",
+				playerTileX, playerTileY
+			);
+
+			if (playerTileX >= kMapWidth - 4 &&
+				playerTileY <= 3) {
+				currentSceen = BOSS;
+				break;
+			}
+			player.Debug();
+			camera.Update(player.GetPosition());
 			player.Draw(camera);
 			break;
 		}
-
+		case BOSS:
+		{
+			Novice::ScreenPrintf(10, 10, "boss");
+			break;
+		}
 		}
 
 		// フレームの終了
