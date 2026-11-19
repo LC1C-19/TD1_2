@@ -3,6 +3,7 @@
 
 #include "InputManager.h"
 #include "Player.h"
+#include "Boss.h"
 #include "GameConfig.h"
 #include "Map.h"
 #include "Camera.h"
@@ -12,7 +13,9 @@
 enum Sceen
 {
 	TITLE,
-	PLAY
+	PLAY,
+	BOSS,
+	MENU
 };
 
 const char kWindowTitle[] = "LC1C_09_シミズ_イツキ";
@@ -31,6 +34,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	// プレイヤー
 	Player player;
 	player.Initialize();
+
+	// ボス
+	Boss boss;
 
 	// マップ
 	Map map;
@@ -63,13 +69,16 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 			if (isFullScreen)
 			{
 				Novice::SetWindowMode(kFullscreen);
-			}
-			else
+			} else
 			{
 				Novice::SetWindowMode(kWindowed);
 			}
 		}
 
+		if ((input.IsKeyTrigger(DIK_ESCAPE) || input.IsButtonTrigger(XINPUT_GAMEPAD_BACK)) &&
+			(currentSceen == PLAY || currentSceen == BOSS)) {
+			currentSceen = MENU;
+		}
 		switch (currentSceen)
 		{
 		case TITLE:
@@ -89,20 +98,77 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		case PLAY:
 		{
 			Novice::ScreenPrintf(10, 10, "play");
-			player.Debug();
-			player.Update(input,map);
-			camera.Update(player.GetPosition());
+			player.Update(input);
+			Vector2 PlayerPosition = player.GetPosition();
 
-			map.Debug(camera);
+			int playerTileX = static_cast<int>(PlayerPosition.x) / kTileSize;
+			int playerTileY = static_cast<int>(PlayerPosition.y) / kTileSize;
+
+			Novice::ScreenPrintf(
+				10, 50,
+				"Tile X:%d Y:%d",
+				playerTileX, playerTileY
+			);
+
+			if (playerTileX >= kMapWidth - 4 &&
+				playerTileY <= 3) {
+				currentSceen = BOSS;
+				break;
+			}
+			player.Debug();
+			camera.Update(player.GetPosition());
 			player.Draw(camera);
+
 			break;
 		}
+		case BOSS:
+		{
+			Novice::ScreenPrintf(10, 10, "boss");
 
+			player.Update(input);
+			player.Update(input,map);
+			camera.Update(player.GetPosition());
+			boss.Update();
+
+			Vector2 PlayerPosition = player.GetPosition();
+			int playerTileX = static_cast<int>(PlayerPosition.x) / kTileSize;
+			int playerTileY = static_cast<int>(PlayerPosition.y) / kTileSize;
+
+			if (playerTileX >= kMapWidth - 4 &&
+				playerTileY <= 3) {
+				player.SetPosition({ 640.0f,620.0f });
+				currentSceen = BOSS;
+				break;
+
+			}
+			boss.Draw();
+			map.Debug(camera);
+			player.Draw(camera);
+
+			break;
+		}
+		case MENU:
+		{
+			Novice::ScreenPrintf(540, 300, "MENU");
+			Novice::ScreenPrintf(500, 350, "> Return to Title");
+			Novice::ScreenPrintf(480, 390, "SPACE or A : Select");
+
+			if (input.IsKeyTrigger(DIK_SPACE) ||
+				input.IsButtonTrigger(XINPUT_GAMEPAD_A)) {
+				currentSceen = TITLE;
+			}
+			break;
+		}
 		}
 
 		// フレームの終了
 		Novice::EndFrame();
 
+		//// ESCキーが押されたらループを抜ける
+		//if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0 ||
+		//	input.IsButtonTrigger(XINPUT_GAMEPAD_BACK)) {
+		//	break;
+		//}
 		// ESCキーが押されたらループを抜ける
 		if (input.IsKeyTrigger(DIK_ESCAPE) ||
 			input.IsButtonTrigger(XINPUT_GAMEPAD_BACK)) {

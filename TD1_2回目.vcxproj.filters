@@ -135,17 +135,5 @@
     <ClInclude Include="Boss.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="GameConfig.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
