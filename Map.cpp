@@ -103,4 +103,51 @@ int Map::GetHeight()
 	return kMapHeight * kTileSize;
 }
 
+void Map::Debug(const Camera& camera) const
+{
+	for (int y = 0; y < kMapHeight; y++)
+	{
+		for (int x = 0; x < kMapWidth; x++)
+		{
+			Vector2 worldPos = {
+				static_cast<float>(x * kTileSize),
+				static_cast<float>(y * kTileSize)
+			};
+
+			Vector2 screenPos = camera.WorldToScreen(worldPos);
+
+			// 画面外は描画しない
+			if (screenPos.x < -kTileSize ||
+				screenPos.x >= 1280 ||
+				screenPos.y < -kTileSize ||
+				screenPos.y >= 720)
+			{
+				continue;
+			}
+
+			// 交互に色を変える
+			unsigned int color;
+
+			if ((x + y) % 2 == 0)
+			{
+				color = 0x555555FF;
+			}
+			else
+			{
+				color = 0x888888FF;
+			}
+
+			Novice::DrawBox(
+				static_cast<int>(screenPos.x),
+				static_cast<int>(screenPos.y),
+				kTileSize,
+				kTileSize,
+				0.0f,
+				color,
+				kFillModeSolid
+			);
+		}
+	}
+}
+
 

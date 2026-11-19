@@ -43,10 +43,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		static_cast<float>(map.GetHeight())
 	);
 
-	// キー入力結果を受け取る箱
-	char keys[256] = { 0 };
-	char preKeys[256] = { 0 };
-
 	int currentSceen = TITLE;
 
 	// ウィンドウの×ボタンが押されるまでループ
@@ -57,7 +53,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		//毎フレーム入力を受け取る
 		input.Update();
 		input.DrawDebug();
-
 
 		//フルスクリーン
 		if (input.IsKeyTrigger(DIK_F11) ||
@@ -95,9 +90,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		{
 			Novice::ScreenPrintf(10, 10, "play");
 			player.Debug();
-			player.Update(input);
+			player.Update(input,map);
 			camera.Update(player.GetPosition());
 
+			map.Debug(camera);
 			player.Draw(camera);
 			break;
 		}
@@ -108,7 +104,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		Novice::EndFrame();
 
 		// ESCキーが押されたらループを抜ける
-		if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0 ||
+		if (input.IsKeyTrigger(DIK_ESCAPE) ||
 			input.IsButtonTrigger(XINPUT_GAMEPAD_BACK)) {
 			break;
 		}
