@@ -98,7 +98,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		case PLAY:
 		{
 			Novice::ScreenPrintf(10, 10, "play");
-			player.Update(input);
+			player.Update(input,map);
 			Vector2 PlayerPosition = player.GetPosition();
 
 			int playerTileX = static_cast<int>(PlayerPosition.x) / kTileSize;
@@ -117,6 +117,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 			}
 			player.Debug();
 			camera.Update(player.GetPosition());
+			map.Debug(camera);
 			player.Draw(camera);
 
 			break;
@@ -125,7 +126,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		{
 			Novice::ScreenPrintf(10, 10, "boss");
 
-			player.Update(input);
 			player.Update(input,map);
 			camera.Update(player.GetPosition());
 			boss.Update();
@@ -164,16 +164,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		// フレームの終了
 		Novice::EndFrame();
 
-		//// ESCキーが押されたらループを抜ける
-		//if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0 ||
-		//	input.IsButtonTrigger(XINPUT_GAMEPAD_BACK)) {
-		//	break;
-		//}
-		// ESCキーが押されたらループを抜ける
-		if (input.IsKeyTrigger(DIK_ESCAPE) ||
-			input.IsButtonTrigger(XINPUT_GAMEPAD_BACK)) {
-			break;
-		}
+		
 	}
 
 	// ライブラリの終了
