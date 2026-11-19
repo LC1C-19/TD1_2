@@ -76,7 +76,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 			}
 		}
 
-		if (input.IsKeyTrigger(DIK_ESCAPE) &&
+		if ((input.IsKeyTrigger(DIK_ESCAPE) || input.IsButtonTrigger(XINPUT_GAMEPAD_BACK)) &&
 			(currentSceen == PLAY || currentSceen == BOSS)) {
 			currentSceen = MENU;
 		}
