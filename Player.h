@@ -9,6 +9,7 @@ public:
 	void Initialize();
 	void Update(const InputManager& input);
 	Vector2 GetPosition() const;
+	void SetPosition(Vector2 position);
 	void Draw(const Camera& camera) const;
 	void Debug();
 

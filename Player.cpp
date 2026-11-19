@@ -108,6 +108,10 @@ Vector2 Player::GetPosition() const
 	return position_;
 }
 
+void Player::SetPosition(Vector2 position) {
+	position_ = position;
+}
+
 void Player::Debug()
 {
 	Novice::ScreenPrintf(10, 30, "position {%.2f : %.2f}", position_.x, position_.y);

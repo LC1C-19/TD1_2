@@ -3,6 +3,7 @@
 
 #include "InputManager.h"
 #include "Player.h"
+#include "Boss.h"
 #include "GameConfig.h"
 #include "Map.h"
 #include "Camera.h"
@@ -32,6 +33,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	// プレイヤー
 	Player player;
 	player.Initialize();
+
+	// ボス
+	Boss boss;
 
 	// マップ
 	Map map;
@@ -120,6 +124,25 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		case BOSS:
 		{
 			Novice::ScreenPrintf(10, 10, "boss");
+
+			player.Update(input);
+			camera.Update(player.GetPosition());
+			boss.Update();
+
+			Vector2 PlayerPosition = player.GetPosition();
+			int playerTileX = static_cast<int>(PlayerPosition.x) / kTileSize;
+			int playerTileY = static_cast<int>(PlayerPosition.y) / kTileSize;
+
+			if (playerTileX >= kMapWidth - 4 &&
+				playerTileY <= 3) {
+				player.SetPosition({ 640.0f,620.0f });
+				currentSceen = BOSS;
+				break;
+
+			}
+			boss.Draw();
+			player.Draw(camera);
+
 			break;
 		}
 		}
