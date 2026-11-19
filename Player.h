@@ -2,12 +2,13 @@
 #include "Vector2.h"
 #include "Camera.h"
 #include "InputManager.h"
+#include "Map.h"
 
 class Player
 {
 public:
 	void Initialize();
-	void Update(const InputManager& input);
+	void Update(const InputManager& input,const Map &map);
 	Vector2 GetPosition() const;
 	void SetPosition(Vector2 position);
 	void Draw(const Camera& camera) const;

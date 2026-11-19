@@ -60,7 +60,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		input.Update();
 		input.DrawDebug();
 
-
 		//フルスクリーン
 		if (input.IsKeyTrigger(DIK_F11) ||
 			input.IsButtonTrigger(XINPUT_GAMEPAD_START))
@@ -127,6 +126,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 			Novice::ScreenPrintf(10, 10, "boss");
 
 			player.Update(input);
+			player.Update(input,map);
 			camera.Update(player.GetPosition());
 			boss.Update();
 
@@ -142,6 +142,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 			}
 			boss.Draw();
+			map.Debug(camera);
 			player.Draw(camera);
 
 			break;
@@ -168,6 +169,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		//	input.IsButtonTrigger(XINPUT_GAMEPAD_BACK)) {
 		//	break;
 		//}
+		// ESCキーが押されたらループを抜ける
+		if (input.IsKeyTrigger(DIK_ESCAPE) ||
+			input.IsButtonTrigger(XINPUT_GAMEPAD_BACK)) {
+			break;
+		}
 	}
 
 	// ライブラリの終了

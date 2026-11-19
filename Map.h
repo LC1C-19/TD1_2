@@ -10,6 +10,7 @@ public:
     void Initialize();
 
     void Draw(const Camera& camera) const;
+    void Debug(const Camera& camera)const;
 
     // 指定したマスが壁かどうか
     bool IsWall(int x, int y) const;

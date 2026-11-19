@@ -14,65 +14,83 @@ void Player::Initialize()
 	speed_ = 5.0f;
 }
 
-void Player::Update(const InputManager& input)
+void Player::Update(const InputManager& input, const Map& map)
 {
-	// 移動方向を取得
-	Vector2 move = input.GetMoveDirection();
+    // 移動方向
+    Vector2 move = input.GetMoveDirection();
 
-	position_.x += move.x * speed_;
-	position_.y += move.y * speed_;
+    float halfWidth = size_.x / 2.0f;
+    float halfHeight = size_.y / 2.0f;
 
-	// 右スティックの入力
-	Vector2 aim = input.GetAimDirection();
+    // X方向の移動
+    float nextX = position_.x + move.x * speed_;
 
-	float aimLength = sqrtf(
-		aim.x * aim.x + aim.y * aim.y
-	);
+    // マップ外に出ないように制限
+    if (nextX < halfWidth)
+    {
+        nextX = halfWidth;
+    }
 
-	if (aimLength > 0.01f)
-	{
-		direction_.x = aim.x / aimLength;
-		direction_.y = aim.y / aimLength;
-	}
-	else
-	{
-		float moveLength = sqrtf(
-			move.x * move.x + move.y * move.y
-		);
+    if (nextX > map.GetWidth() - halfWidth)
+    {
+        nextX = map.GetWidth() - halfWidth;
+    }
 
-		if (moveLength > 0.01f)
-		{
-			direction_.x = move.x / moveLength;
-			direction_.y = move.y / moveLength;
-		}
-	}
+    // X方向の壁判定
+    if (!map.IsWallAt(nextX - halfWidth, position_.y - halfHeight) &&
+        !map.IsWallAt(nextX + halfWidth - 1.0f, position_.y - halfHeight) &&
+        !map.IsWallAt(nextX - halfWidth, position_.y + halfHeight - 1.0f) &&
+        !map.IsWallAt(nextX + halfWidth - 1.0f, position_.y + halfHeight - 1.0f))
+    {
+        position_.x = nextX;
+    }
 
-	float mapWidth = static_cast<float>(Map::GetWidth());
-	float mapHeight = static_cast<float>(Map::GetHeight());
+    // Y方向の移動
+    float nextY = position_.y + move.y * speed_;
 
-	// 画面外への移動を制限
-	float halfWidth = size_.x / 2.0f;
-	float halfHeight = size_.y / 2.0f;
+    if (nextY < halfHeight)
+    {
+        nextY = halfHeight;
+    }
 
-	if (position_.x < halfWidth)
-	{
-		position_.x = halfWidth;
-	}
+    if (nextY > map.GetHeight() - halfHeight)
+    {
+        nextY = map.GetHeight() - halfHeight;
+    }
 
-	if (position_.x > mapWidth - halfWidth)
-	{
-		position_.x = mapWidth - halfWidth;
-	}
+    // Y方向の壁判定
+    if (!map.IsWallAt(position_.x - halfWidth, nextY - halfHeight) &&
+        !map.IsWallAt(position_.x + halfWidth - 1.0f, nextY - halfHeight) &&
+        !map.IsWallAt(position_.x - halfWidth, nextY + halfHeight - 1.0f) &&
+        !map.IsWallAt(position_.x + halfWidth - 1.0f, nextY + halfHeight - 1.0f))
+    {
+        position_.y = nextY;
+    }
 
-	if (position_.y < halfHeight)
-	{
-		position_.y = halfHeight;
-	}
+    // 右スティックの入力
+    Vector2 aim = input.GetAimDirection();
 
-	if (position_.y > mapHeight - halfHeight)
-	{
-		position_.y = mapHeight - halfHeight;
-	}
+    float aimLength = sqrtf(
+        aim.x * aim.x + aim.y * aim.y
+    );
+
+    if (aimLength > 0.01f)
+    {
+        direction_.x = aim.x / aimLength;
+        direction_.y = aim.y / aimLength;
+    }
+    else
+    {
+        float moveLength = sqrtf(
+            move.x * move.x + move.y * move.y
+        );
+
+        if (moveLength > 0.01f)
+        {
+            direction_.x = move.x / moveLength;
+            direction_.y = move.y / moveLength;
+        }
+    }
 }
 
 
