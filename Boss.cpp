@@ -1,4 +1,4 @@
-#include "Boss.h"
+ï»¿#include "Boss.h"
 #include <Novice.h>
 #include <cmath>
 #include <cstdlib>
@@ -25,21 +25,21 @@ Boss::Boss() {
 }
 void Boss::Update() {
 
-	//ƒ[ƒv‚Ü‚Å‚ÌŠÔ‚ğŒ¸‚ç‚·
+	//ãƒ¯ãƒ¼ãƒ—ã¾ã§ã®æ™‚é–“ã‚’æ¸›ã‚‰ã™
 	warpTimer_--;
 	if (warpTimer_ <= 0) {
 		Warp();
 		warpTimer_ = 180;
 	}
 
-	//‘S•ûˆÊ’e”­Ë‚ÌŠÔ‚ğŒ¸‚ç‚·
+	//å…¨æ–¹ä½å¼¾ç™ºå°„ã®æ™‚é–“ã‚’æ¸›ã‚‰ã™
 	attackTimer_--;
 	if (attackTimer_ <= 0) {
 		FireRadialBullets();
 		attackTimer_ = 120;
 	}
 
-	//’e‚ÌˆÚ“®
+	//å¼¾ã®ç§»å‹•
 	for (int i = 0;i < kMaxBullets;i++) {
 		if (!bullets_[i].isActive) {
 			continue;
@@ -47,7 +47,7 @@ void Boss::Update() {
 		bullets_[i].position.x += bullets_[i].velocity.x;
 		bullets_[i].position.y += bullets_[i].velocity.y;
 
-		//‰æ–ÊŠO‚Éo‚½‚ç’e‚ğÁ‚·
+		//ç”»é¢å¤–ã«å‡ºãŸã‚‰å¼¾ã‚’æ¶ˆã™
 		if (bullets_[i].position.x<-bullets_[i].radius ||
 			bullets_[i].position.x>kScreenWidth + bullets_[i].radius ||
 			bullets_[i].position.y<-bullets_[i].radius ||
@@ -58,7 +58,7 @@ void Boss::Update() {
 }
 
 void Boss::Warp() {
-	//‰æ–Ê’[‚ÉŠñ‚è‚·‚¬‚È‚¢”ÍˆÍ‚Öƒ‰ƒ“ƒ_ƒ€ƒ[ƒv
+	//ç”»é¢ç«¯ã«å¯„ã‚Šã™ããªã„ç¯„å›²ã¸ãƒ©ãƒ³ãƒ€ãƒ ãƒ¯ãƒ¼ãƒ—
 	position_.x = static_cast<float>(100 + rand() % 1080);
 	position_.y = static_cast<float>(80 + rand() % 300);
 }
@@ -68,12 +68,12 @@ void Boss::FireRadialBullets() {
 	const float kBulletSpeed = 4.0f;
 
 	for (int bulletNumber = 0;bulletNumber < kBulletCount;bulletNumber++) {
-		//0~360“x‚ğ“™ŠÔŠu‚É•ªŠ„
+		//0~360åº¦ã‚’ç­‰é–“éš”ã«åˆ†å‰²
 		float angle =
 			2.0f * kPi * static_cast<float>(bulletNumber) /
 			static_cast<float>(kBulletCount);
 
-		//–¢g—p‚Ì’e‚ğ’T‚·
+		//æœªä½¿ç”¨ã®å¼¾ã‚’æ¢ã™
 		for (int i = 0;i < kMaxBullets;i++) {
 			if (!bullets_[i].isActive) {
 				bullets_[i].position = position_;
@@ -90,7 +90,7 @@ void Boss::FireRadialBullets() {
 }
 
 void Boss::Draw() {
-	//ƒ{ƒX
+	//ãƒœã‚¹
 	Novice::DrawEllipse(
 		static_cast<int>(position_.x),
 		static_cast<int>(position_.y),
@@ -101,7 +101,7 @@ void Boss::Draw() {
 		kFillModeSolid
 	);
 
-	//’e
+	//å¼¾
 	for (int i = 0;i < kMaxBullets;i++) {
 		if (bullets_[i].isActive) {
 			Novice::DrawEllipse(
