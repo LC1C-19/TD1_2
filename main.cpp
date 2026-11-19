@@ -14,7 +14,8 @@ enum Sceen
 {
 	TITLE,
 	PLAY,
-	BOSS
+	BOSS,
+	MENU
 };
 
 const char kWindowTitle[] = "LC1C_09_シミズ_イツキ";
@@ -48,10 +49,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		static_cast<float>(map.GetHeight())
 	);
 
-	// キー入力結果を受け取る箱
-	char keys[256] = { 0 };
-	char preKeys[256] = { 0 };
-
 	int currentSceen = TITLE;
 
 	// ウィンドウの×ボタンが押されるまでループ
@@ -73,13 +70,16 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 			if (isFullScreen)
 			{
 				Novice::SetWindowMode(kFullscreen);
-			}
-			else
+			} else
 			{
 				Novice::SetWindowMode(kWindowed);
 			}
 		}
 
+		if (input.IsKeyTrigger(DIK_ESCAPE) &&
+			(currentSceen == PLAY || currentSceen == BOSS)) {
+			currentSceen = MENU;
+		}
 		switch (currentSceen)
 		{
 		case TITLE:
@@ -119,6 +119,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 			player.Debug();
 			camera.Update(player.GetPosition());
 			player.Draw(camera);
+
 			break;
 		}
 		case BOSS:
@@ -145,16 +146,28 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 			break;
 		}
+		case MENU:
+		{
+			Novice::ScreenPrintf(540, 300, "MENU");
+			Novice::ScreenPrintf(500, 350, "> Return to Title");
+			Novice::ScreenPrintf(480, 390, "SPACE or A : Select");
+
+			if (input.IsKeyTrigger(DIK_SPACE) ||
+				input.IsButtonTrigger(XINPUT_GAMEPAD_A)) {
+				currentSceen = TITLE;
+			}
+			break;
+		}
 		}
 
 		// フレームの終了
 		Novice::EndFrame();
 
-		// ESCキーが押されたらループを抜ける
-		if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0 ||
-			input.IsButtonTrigger(XINPUT_GAMEPAD_BACK)) {
-			break;
-		}
+		//// ESCキーが押されたらループを抜ける
+		//if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0 ||
+		//	input.IsButtonTrigger(XINPUT_GAMEPAD_BACK)) {
+		//	break;
+		//}
 	}
 
 	// ライブラリの終了
